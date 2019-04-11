@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8DBB5C14225E935800FA2BCC /* CAS5.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DBB5C13225E935800FA2BCC /* CAS5.swift */; };
 		8DBD4BF5225D926E005231EB /* CAS4.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DBD4BF4225D926E005231EB /* CAS4.swift */; };
 		8DBD4BF7225D92D2005231EB /* CAS3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DBD4BF6225D92D2005231EB /* CAS3.swift */; };
 		8DDB6757225ACB4700E51F97 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DDB6756225ACB4700E51F97 /* main.swift */; };
@@ -29,6 +30,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		8DBB5C13225E935800FA2BCC /* CAS5.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CAS5.swift; sourceTree = "<group>"; };
 		8DBD4BF4225D926E005231EB /* CAS4.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CAS4.swift; sourceTree = "<group>"; };
 		8DBD4BF6225D92D2005231EB /* CAS3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CAS3.swift; sourceTree = "<group>"; };
 		8DDB6753225ACB4700E51F97 /* XMLTableToRulesConvertor */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = XMLTableToRulesConvertor; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -55,6 +57,7 @@
 			children = (
 				8DBD4BF6225D92D2005231EB /* CAS3.swift */,
 				8DBD4BF4225D926E005231EB /* CAS4.swift */,
+				8DBB5C13225E935800FA2BCC /* CAS5.swift */,
 			);
 			path = Documents;
 			sourceTree = "<group>";
@@ -146,6 +149,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8DDB6757225ACB4700E51F97 /* main.swift in Sources */,
+				8DBB5C14225E935800FA2BCC /* CAS5.swift in Sources */,
 				8DDB6764225B000200E51F97 /* Table.swift in Sources */,
 				8DDB6762225AFAE400E51F97 /* Rule.swift in Sources */,
 				8DDB6760225AE12600E51F97 /* AtomRepresentable.swift in Sources */,

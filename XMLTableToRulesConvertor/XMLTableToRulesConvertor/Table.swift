@@ -11,6 +11,7 @@ import Foundation
 struct Table: CustomStringConvertible {
     
     var rules: [Rule] = []
+    var notes: [String]? = nil
     
     var key: String
     var title: String? = nil
@@ -35,6 +36,17 @@ struct Table: CustomStringConvertible {
         
         self.rules.forEach { (rule) in
             result.append(rule.description)
+        }
+        
+        if let notes = self.notes {
+            result.append("<notes>")
+            for (index, note) in notes.enumerated() {
+                result.append("<note key=\"\(self.key).\(index + 1)\">")
+                result.append(note)
+                result.append("</note>")
+            }
+            
+            result.append("</notes>")
         }
         
         result.append("</rules>")

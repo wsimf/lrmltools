@@ -13,7 +13,14 @@ protocol AtomRepresentable: CustomStringConvertible { }
 /// Represents an atom with the optional operator
 struct Atom: AtomRepresentable {
     var variable: Variable
+    var rel: String? = nil
     var op: Operator?
+    
+    init(variable: Variable, op: Operator?) {
+        self.variable = variable
+        self.rel = nil
+        self.op = op
+    }
     
     var description: String {
         var result = ""
@@ -22,7 +29,14 @@ struct Atom: AtomRepresentable {
         }
         
         result.append("<atom>")
+        if let rel = self.rel {
+            result.append("<rel>")
+            result.append(rel)
+            result.append("</rel>")
+        }
+        
         result.append(variable.description)
+        
         result.append("</atom>")
         
         if let op = self.op {

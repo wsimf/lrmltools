@@ -45,6 +45,13 @@ struct Variable: CustomStringConvertible {
     var name: String
     var unit: String? = nil
     var value: String? = nil
+    var noteRefs: [String]? = nil
+    
+    init(name: String, unit: String?, value: String?) {
+        self.name = name
+        self.unit = unit
+        self.value = value
+    }
     
     var description: String {
         var result = ""
@@ -54,7 +61,13 @@ struct Variable: CustomStringConvertible {
         result.append("</var>")
         
         if let value = self.value {
-            result.append("<val>")
+            if let noteRefs = self.noteRefs {
+                let noteRefString = noteRefs.joined(separator: ",")
+                result.append("<val noteRef=\"\(noteRefString)\">")
+            } else {
+                result.append("<val>")
+            }
+            
             result.append(value)
             if let unit = self.unit {
                 result.append(" \(unit)")
@@ -66,11 +79,13 @@ struct Variable: CustomStringConvertible {
         return result
     }
     
-    func settingValue(val: String) -> Variable {
+    func settingValue(val: String, noteRefs: [String]? = nil) -> Variable {
         var atom = self
         atom.value = val
+        atom.noteRefs = noteRefs
         return atom
     }
+
 }
 
 
