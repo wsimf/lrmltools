@@ -61,6 +61,7 @@ struct Atom: AtomRepresentable {
 
 /// Represents an array of atoms combined via a BooleanValue 
 struct BooleanedAtoms: AtomRepresentable {
+    
     var atoms: [AtomRepresentable]
     var bool: BooleanValue
     
@@ -73,6 +74,18 @@ struct BooleanedAtoms: AtomRepresentable {
         }
         
         if atoms.count > 1 { result.append(bool.end) }
+        return result
+    }
+}
+
+struct NegatedAtom: AtomRepresentable {
+    
+    var atom: Atom
+    
+    var description: String {
+        var result = "<not>"
+        result.append(atom.description)
+        result.append("</not>")
         return result
     }
 }

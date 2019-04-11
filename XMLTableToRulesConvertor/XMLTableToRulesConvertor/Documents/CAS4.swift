@@ -67,7 +67,7 @@ class CAS4 {
         let angle = Variable(name: "angleBetweenWallAndRelevantBoundary", unit: "degress", value: nil)
         let firecell = Variable(name: "firecellProtection", unit: nil, value: nil)
         let width = Variable(name: "widthOfFirecell", unit: "m", value: nil)
-        let percentage = Variable(name: "maximumPercentageOfUnprotectedWallArea", unit: "%", value: nil)
+        let percentage = Variable(name: "percentageOfUnprotectedWallArea", unit: "%", value: nil)
         
         let distanceValues = [1,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
         var thenValues: [[Int]] = []
@@ -178,7 +178,7 @@ class CAS4 {
                 rule.addIf(atom: firecellAtom(for: colIndex))
                 rule.addIf(atom: widthAtom(for: colIndex))
                 
-                rule.addThen(atom: Atom(variable: percentage.settingValue(val: String(thenVal)), op: .equal))
+                rule.addThen(atom: Atom(variable: percentage.settingValue(val: String(thenVal)), op: .lessThanEqual))
                 
                 table.addRule(rule: rule)
             }
