@@ -9,7 +9,7 @@
 import AppKit
 import Foundation
 
-let table = CAS6.generateTable53().description
+let table = CAS2.generateTable54().description
 print(table)
 
 // automatically copy content ready to be pasted
