@@ -8,9 +8,20 @@
 
 import Foundation
 
-class CAS5 {
+class CAS5: Document {
     
-    static func generateTable20() -> Table {
+    func generateTable(for id: String, in subDocument: String? = nil) -> Table? {
+        switch id {
+        case "2.0": return self.generateTable20()
+        case "3.2": return self.generateTable32()
+        case "5.1": return self.generateTable51()
+        case "5.2.1": return self.generateTable521()
+        case "5.2.2": return self.generateTable522()
+        default: return nil
+        }
+    }
+    
+    private func generateTable20() -> Table {
         let occupant = Variable(name: "occupantLoad", unit: nil, value: nil)
         let height = Variable(name: "escapteHeight", unit: "m", value: nil)
         let alarmType = Variable(name: "alarmType", unit: nil, value: nil)
@@ -136,13 +147,11 @@ class CAS5 {
         return table
     }
     
-    static func generateTable32() -> Table {
-        let deadEnd = Atom(variable: Variable(name: "escapeRoute", unit: nil, value: "deadEndOpenPath"), op: .equal)
-        let total = Atom(variable: Variable(name: "escapeRoute", unit: nil, value: "totalOpenPath"), op: .equal)
+    private func generateTable32() -> Table {
+        let deadEnd = Atom(variable: Variable(name: "deadEndOpenPath", unit: "m", value: nil), op: .lessThanEqual)
+        let total = Atom(variable: Variable(name: "totalOpenPath", unit: "m", value: nil), op: .lessThanEqual)
         
-        let system = Atom(variable: Variable(name: "system", unit: nil, value: nil), op: .equal)
-        
-        let distance = Atom(variable: Variable(name: "travelDistance", unit: "m", value: nil), op: .lessThanEqual)
+        let system = Atom(variable: Variable(name: "fireSafetySystem", unit: nil, value: nil), op: .equal)
         
         var ruleKey = Atom(variable: Variable(name: "rule", unit: nil, value: "nil"), op: .equal)
         ruleKey.rel = "key"
@@ -152,70 +161,40 @@ class CAS5 {
         
         var rule = Rule()
         rule.addIf(atom: BooleanedAtoms(atoms: [system.settingValue(val: "none"), system.settingValue(val: "type2")], bool: .or))
-        rule.addIf(atom: deadEnd)
-        rule.addThen(atom: distance.settingValue(val: "25"))
-        table.addRule(rule: rule)
-        
-        rule = Rule()
-        rule.addIf(atom: BooleanedAtoms(atoms: [system.settingValue(val: "none"), system.settingValue(val: "type2")], bool: .or))
-        rule.addIf(atom: total)
-        rule.addThen(atom: distance.settingValue(val: "60"))
+        rule.addThen(atom: deadEnd.settingValue(val: "25"))
+        rule.addThen(atom: total.settingValue(val: "60"))
         table.addRule(rule: rule)
         
         rule = Rule()
         rule.addIf(atom: BooleanedAtoms(atoms: [system.settingValue(val: "type3"), ruleKey.settingValue(val: "t2.0.2")], bool: .and))
-        rule.addIf(atom: deadEnd)
-        rule.addThen(atom: distance.settingValue(val: "35"))
-        table.addRule(rule: rule)
-        
-        rule = Rule()
-        rule.addIf(atom: BooleanedAtoms(atoms: [system.settingValue(val: "type3"), ruleKey.settingValue(val: "t2.0.2")], bool: .and))
-        rule.addIf(atom: total)
-        rule.addThen(atom: distance.settingValue(val: "75"))
+        rule.addThen(atom: deadEnd.settingValue(val: "35"))
+        rule.addThen(atom: total.settingValue(val: "75"))
         table.addRule(rule: rule)
         
         rule = Rule()
         rule.addIf(atom: system.settingValue(val: "type4"))
-        rule.addIf(atom: deadEnd)
-        rule.addThen(atom: distance.settingValue(val: "50"))
-        table.addRule(rule: rule)
-        
-        rule = Rule()
-        rule.addIf(atom: system.settingValue(val: "type4"))
-        rule.addIf(atom: total)
-        rule.addThen(atom: distance.settingValue(val: "120"))
+        rule.addThen(atom: deadEnd.settingValue(val: "50"))
+        rule.addThen(atom: total.settingValue(val: "120"))
         table.addRule(rule: rule)
         
         rule = Rule()
         rule.addIf(atom: system.settingValue(val: "type6"))
-        rule.addIf(atom: deadEnd)
-        rule.addThen(atom: distance.settingValue(val: "50"))
-        table.addRule(rule: rule)
-        
-        rule = Rule()
-        rule.addIf(atom: system.settingValue(val: "type6"))
-        rule.addIf(atom: total)
-        rule.addThen(atom: distance.settingValue(val: "120"))
+        rule.addThen(atom: deadEnd.settingValue(val: "50"))
+        rule.addThen(atom: total.settingValue(val: "120"))
         table.addRule(rule: rule)
         
         rule = Rule()
         rule.addIf(atom: system.settingValue(val: "type7"))
-        rule.addIf(atom: deadEnd)
-        rule.addThen(atom: distance.settingValue(val: "75"))
+        rule.addThen(atom: deadEnd.settingValue(val: "75"))
+        rule.addThen(atom: total.settingValue(val: "150"))
         table.addRule(rule: rule)
-        
-        rule = Rule()
-        rule.addIf(atom: system.settingValue(val: "type7"))
-        rule.addIf(atom: total)
-        rule.addThen(atom: distance.settingValue(val: "150"))
-        table.addRule(rule: rule)
-        
+                
         table.notes = ["If open path length increases for smoke detectors are being applied, where Acceptable Solution F7/AS1 allows heat detectors to be substituted for smoke detectors, not less than 70% of the firecell shall be protected with smoke detectors. Heat detectors cannot be substituted for smoke detectors in exitways.", "If smoke and heat detection systems are installed in order to extend permissible travel distance in accordance with this table and are not a requirement of Paragraph 2.2.1 then Fire Service connection is not required."]
         
         return table
     }
     
-    static func generateTable51() -> Table {
+    private func generateTable51() -> Table {
         let distance = Variable(name: "distanceToRelevantBoundary", unit: "m", value: nil)
         
         let firecell = Atom(variable: Variable(name: "firecellProtection", unit: nil, value: nil), op: .equal)
@@ -315,7 +294,7 @@ class CAS5 {
         return table
     }
     
-    static func generateTable521() -> Table {
+    private func generateTable521() -> Table {
         let riskGroup = Atom(variable: Variable(name: "riskGroup", unit: nil, value: "WB"), op: .equal)
         
         let distance = Variable(name: "distanceToRelevantBoundary", unit: "m", value: nil)
@@ -451,7 +430,7 @@ class CAS5 {
         return table
     }
     
-    static func generateTable522() -> Table {
+    private func generateTable522() -> Table {
         let riskGroup = Atom(variable: Variable(name: "riskGroup", unit: nil, value: "WB"), op: .equal)
         
         let distance = Variable(name: "distanceToRelevantBoundary", unit: "m", value: nil)

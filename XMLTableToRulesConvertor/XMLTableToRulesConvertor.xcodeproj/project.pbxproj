@@ -18,6 +18,8 @@
 		8DDB6762225AFAE400E51F97 /* Rule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DDB6761225AFAE400E51F97 /* Rule.swift */; };
 		8DDB6764225B000200E51F97 /* Table.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DDB6763225B000200E51F97 /* Table.swift */; };
 		8DF91E6A22657129001803D0 /* E1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DF91E6922657129001803D0 /* E1.swift */; };
+		8DF91E6C2266967D001803D0 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DF91E6B2266967D001803D0 /* Document.swift */; };
+		8DF91E6E22681B0A001803D0 /* XMLConvertor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DF91E6D22681B0A001803D0 /* XMLConvertor.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -45,6 +47,8 @@
 		8DDB6761225AFAE400E51F97 /* Rule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rule.swift; sourceTree = "<group>"; };
 		8DDB6763225B000200E51F97 /* Table.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Table.swift; sourceTree = "<group>"; };
 		8DF91E6922657129001803D0 /* E1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = E1.swift; sourceTree = "<group>"; };
+		8DF91E6B2266967D001803D0 /* Document.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
+		8DF91E6D22681B0A001803D0 /* XMLConvertor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XMLConvertor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +100,8 @@
 				8DDB675F225AE12600E51F97 /* AtomRepresentable.swift */,
 				8DDB6761225AFAE400E51F97 /* Rule.swift */,
 				8DDB6763225B000200E51F97 /* Table.swift */,
+				8DF91E6B2266967D001803D0 /* Document.swift */,
+				8DF91E6D22681B0A001803D0 /* XMLConvertor.swift */,
 			);
 			path = XMLTableToRulesConvertor;
 			sourceTree = "<group>";
@@ -162,9 +168,11 @@
 				8DBB5C182260101400FA2BCC /* CAS2.swift in Sources */,
 				8DDB6764225B000200E51F97 /* Table.swift in Sources */,
 				8DDB6762225AFAE400E51F97 /* Rule.swift in Sources */,
+				8DF91E6E22681B0A001803D0 /* XMLConvertor.swift in Sources */,
 				8DBB5C16225FE95700FA2BCC /* CAS6.swift in Sources */,
 				8DDB6760225AE12600E51F97 /* AtomRepresentable.swift in Sources */,
 				8DBD4BF7225D92D2005231EB /* CAS3.swift in Sources */,
+				8DF91E6C2266967D001803D0 /* Document.swift in Sources */,
 				8DF91E6A22657129001803D0 /* E1.swift in Sources */,
 				8DBD4BF5225D926E005231EB /* CAS4.swift in Sources */,
 				8DDB675E225AE00C00E51F97 /* Components.swift in Sources */,

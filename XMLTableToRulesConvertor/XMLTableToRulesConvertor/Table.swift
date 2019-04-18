@@ -16,6 +16,9 @@ struct Table: CustomStringConvertible {
     var key: String
     var title: String? = nil
     
+    var refValues: [String]? = nil
+    var refTypes: [String]? = nil
+    
     init(key: String) {
         self.key = key
     }
@@ -27,12 +30,36 @@ struct Table: CustomStringConvertible {
     }
     
     var description: String {
-        var result = ""
-        if let title = self.title {
-            result.append("<rules key=\"\(self.key)\" title=\"\(title)\">")
-        } else {
-            result.append("<rules key=\"\(self.key)\">")
+        let attributes: [String : String] = {
+            var result: [String : String] = [:]
+            result["key"] = self.key
+            if let title = self.title {
+                result["title"] = title
+            }
+            
+            if let refValues = self.refValues {
+                result["keyRef"] = refValues.joined(separator: ",")
+            }
+            
+            if let refTypes = self.refTypes {
+                result["type"] = refTypes.joined(separator: ",")
+            }
+            return result
+        }()
+        
+        let attributesSort = attributes.sorted { (lhs, rhs) -> Bool in
+            if lhs.key == "key" { return true }
+            if lhs.key == "title" { return true }
+            return false
         }
+        
+        var result = "<rules"
+        attributesSort.forEach { (val) in
+            result.append(" \(val.key)=\"\(val.value)\"")
+        }
+        
+        result.append(">")
+        
         
         self.rules.forEach { (rule) in
             result.append(rule.description)

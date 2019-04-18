@@ -22,6 +22,12 @@ struct Atom: AtomRepresentable {
         self.op = op
     }
     
+    init(variable: Variable, op: Operator?, rel: String?) {
+        self.variable = variable
+        self.rel = rel
+        self.op = op
+    }
+    
     var description: String {
         var result = ""
         if let op = self.op {
@@ -86,6 +92,43 @@ struct NegatedAtom: AtomRepresentable {
         var result = "<not>"
         result.append(atom.description)
         result.append("</not>")
+        return result
+    }
+}
+
+struct FunctionAtom: AtomRepresentable {
+    
+    enum FunctionType: String, XMLStartEndRepresentable {
+        case ratio = "ratio"
+        
+        var start: String { return "<\(self.rawValue)>"}
+        var end: String { return "</\(self.rawValue)>"}
+    }
+    
+    var function: String
+    var type: FunctionType
+    var value: Double
+    var op: Operator
+    
+    var description: String {
+        var result = self.op.start
+        result.append("<atom>")
+        
+        result.append("<func>")
+        result.append("(\(self.function))")
+        result.append("</func>")
+        
+        result.append("<var>")
+        result.append(self.type.rawValue)
+        result.append("</var>")
+        
+        result.append("<val>")
+        result.append(String(self.value))
+        result.append("</val>")
+        
+        result.append("</atom>")
+        result.append(op.end)
+        
         return result
     }
 }

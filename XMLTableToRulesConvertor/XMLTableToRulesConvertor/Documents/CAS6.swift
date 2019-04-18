@@ -8,9 +8,48 @@
 
 import Foundation
 
-class CAS6 {
+class CAS6: Document {
     
-    static func generateTable51() -> Table {
+    func generateTable(for id: String, in subDocument: String? = nil) -> Table? {
+        switch id {
+        case "3.2": return self.generateTable32()
+        case "5.1": return self.generateTable51()
+        case "5.2": return self.generateTable52()
+        case "5.3": return self.generateTable53()
+        default: return nil
+        }
+    }
+    
+    private func generateTable32() -> Table {
+        let deadEnd = Atom(variable: Variable(name: "deadEndOpenPath", unit: "m", value: nil), op: .lessThanEqual)
+        let total = Atom(variable: Variable(name: "totalOpenPath", unit: "m", value: nil), op: .lessThanEqual)
+        
+        let system = Atom(variable: Variable(name: "fireSafetySystem", unit: nil, value: nil), op: .equal)
+        
+        var ruleKey = Atom(variable: Variable(name: "rule", unit: nil, value: "nil"), op: .equal)
+        ruleKey.rel = "key"
+        
+        var table = Table(key: "t3.2")
+        table.title = "Travel distances on escape routes for risk group WS"
+        
+        var rule = Rule()
+        rule.addIf(atom: system.settingValue(val: "type6"))
+        rule.addThen(atom: deadEnd.settingValue(val: "50"))
+        rule.addThen(atom: total.settingValue(val: "120"))
+        table.addRule(rule: rule)
+        
+        rule = Rule()
+        rule.addIf(atom: system.settingValue(val: "type7"))
+        rule.addThen(atom: deadEnd.settingValue(val: "75"))
+        rule.addThen(atom: total.settingValue(val: "180"))
+        table.addRule(rule: rule)
+        
+        table.notes = ["If smoke detection systems are installed in order to extend permissible travel distance in accordance with this table and are not a requirement of Paragraph 2.2.1 then Fire Service connection is not required."]
+        
+        return table
+    }
+    
+    private func generateTable51() -> Table {
         let distance = Variable(name: "distanceToRelevantBoundary", unit: "m", value: nil)
         let area = Variable(name: "typeBArea", unit: "m^2", value: nil)
         
@@ -38,7 +77,7 @@ class CAS6 {
         return table
     }
     
-    static func generateTable52() -> Table {
+    private func generateTable52() -> Table {
         let riskGroup = Atom(variable: Variable(name: "riskGroup", unit: nil, value: "WS"), op: .equal)
         
         let distance = Variable(name: "distanceToRelevantBoundary", unit: "m", value: nil)
@@ -141,7 +180,7 @@ class CAS6 {
         return table
     }
     
-    static func generateTable53() -> Table {
+    private func generateTable53() -> Table {
         let distance = Variable(name: "distanceToRelevantBoundary", unit: "m", value: nil)
         let area = Variable(name: "largestPermittedSingleUnprotectedArea", unit: "m^2", value: nil)
         let distanceToAdjecent = Variable(name: "distanceToAdjacentUnprotectedArea", unit: "m", value: nil)

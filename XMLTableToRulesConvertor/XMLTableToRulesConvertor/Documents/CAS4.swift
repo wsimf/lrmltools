@@ -8,9 +8,62 @@
 
 import Foundation
 
-class CAS4 {
+class CAS4: Document {
     
-    static func generateTable51() -> Table {
+    func generateTable(for id: String, in subDocument: String? = nil) -> Table? {
+        switch id {
+        case "3.2": return self.generateTable32()
+        case "5.1": return self.generateTable51()
+        case "5.2": return self.generateTable52()
+        case "5.3": return self.generateTable53()
+        case "5.4": return self.generateTable54()
+        case "7.1": return self.generateTable71()
+        default: return nil
+        }
+    }
+    
+    private func generateTable32() -> Table {
+        let deadEnd = Atom(variable: Variable(name: "deadEndOpenPath", unit: "m", value: nil), op: .lessThanEqual)
+        let total = Atom(variable: Variable(name: "totalOpenPath", unit: "m", value: nil), op: .lessThanEqual)
+        
+        let system = Atom(variable: Variable(name: "fireSafetySystem", unit: nil, value: nil), op: .equal)
+        
+        var ruleKey = Atom(variable: Variable(name: "rule", unit: nil, value: "nil"), op: .equal)
+        ruleKey.rel = "key"
+        
+        var table = Table(key: "t3.2")
+        table.title = "Travel distances on escape routes for risk group CA"
+        
+        var rule = Rule()
+        rule.addIf(atom: BooleanedAtoms(atoms: [system.settingValue(val: "none"), system.settingValue(val: "type2")], bool: .or))
+        rule.addThen(atom: deadEnd.settingValue(val: "20"))
+        rule.addThen(atom: total.settingValue(val: "50"))
+        table.addRule(rule: rule)
+        
+        rule = Rule()
+        rule.addIf(atom: system.settingValue(val: "type4"))
+        rule.addThen(atom: deadEnd.settingValue(val: "40"))
+        rule.addThen(atom: total.settingValue(val: "100"))
+        table.addRule(rule: rule)
+        
+        rule = Rule()
+        rule.addIf(atom: system.settingValue(val: "type6"))
+        rule.addThen(atom: deadEnd.settingValue(val: "40"))
+        rule.addThen(atom: total.settingValue(val: "100"))
+        table.addRule(rule: rule)
+        
+        rule = Rule()
+        rule.addIf(atom: system.settingValue(val: "type7"))
+        rule.addThen(atom: deadEnd.settingValue(val: "50"))
+        rule.addThen(atom: total.settingValue(val: "120"))
+        table.addRule(rule: rule)
+        
+        table.notes = ["If open path length increases for smoke detectors are being applied, where Acceptable Solution F7/AS1 allows heat detectors to be substituted for smoke detectors, not less than 70% of the firecell shall be protected with smoke detectors. Heat detectors cannot be substituted for smoke detectors in exitways.", "If smoke and heat detection systems are installed in order to extend permissible travel distance in accordance with this table and are not a requirement of Paragraph 2.2.1 then Fire Service connection is not required."]
+        
+        return table
+    }
+    
+    private func generateTable51() -> Table {
         let distance = Variable(name: "distanceToRelevantBoundary", unit: "m", value: nil)
         let area = Variable(name: "typeBArea", unit: "m^2", value: nil)
         let firecell = Variable(name: "firecellProtection", unit: nil, value: nil)
@@ -60,7 +113,7 @@ class CAS4 {
         return table
     }
     
-    static func generateTable52() -> Table {
+    private func generateTable52() -> Table {
         let riskGroup = Atom(variable: Variable(name: "riskGroup", unit: nil, value: "CA"), op: .equal)
         
         let distance = Variable(name: "distanceToRelevantBoundary", unit: "m", value: nil)
@@ -187,7 +240,7 @@ class CAS4 {
         return table
     }
     
-    static func generateTable53() -> Table {
+    private func generateTable53() -> Table {
         let firecell = Variable(name: "firecellProtection", unit: nil, value: nil)
         let distance = Variable(name: "distanceToRelevantBoundary", unit: "m", value: nil)
         let area = Variable(name: "largestPermittedSingleUnprotectedArea", unit: "m^2", value: nil)
@@ -244,7 +297,7 @@ class CAS4 {
         return table
     }
     
-    static func generateTable54() -> Table {
+    private func generateTable54() -> Table {
         let apron = Variable(name: "apronProjection", unit: "m", value: nil)
         let height = Variable(name: "spandrelHeight", unit: "m", value: nil)
         
@@ -277,7 +330,7 @@ class CAS4 {
         return table
     }
     
-    static func generateTable71() -> Table {
+    private func generateTable71() -> Table {
         let construction = Variable(name: "chimneyConstruction", unit: nil, value: nil)
         let jambTicknessEx = Variable(name: "chimneyJambThicknessExcludingFillingAndFlueLiner", unit: "mm", value: nil)
         let backTicknessEx = Variable(name: "chimneyBackThicknessExcludingFillingAndFlueLiner", unit: "mm", value: nil)

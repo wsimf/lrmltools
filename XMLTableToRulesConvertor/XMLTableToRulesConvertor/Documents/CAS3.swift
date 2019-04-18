@@ -8,9 +8,40 @@
 
 import Foundation
 
-class CAS3 {
+class CAS3: Document {
     
-    static func generateTable52() -> Table {
+    func generateTable(for id: String, in subDocument: String? = nil) -> Table? {
+        switch id {
+        case "3.2": return self.generateTable32()
+        case "5.2": return self.generateTable52()
+        case "5.3": return self.generateTable53()
+        case "7.1": return self.generateTable71()
+        default: return nil
+        }
+    }
+    
+    private func generateTable32() -> Table {
+        let deadEnd = Atom(variable: Variable(name: "deop", unit: nil, value: nil), op: .lessThanEqual)
+        let total = Atom(variable: Variable(name: "top", unit: nil, value: nil), op: .lessThanEqual)
+        
+        let system = Atom(variable: Variable(name: "fireSafetySystem", unit: nil, value: nil), op: .equal)
+        
+        var ruleKey = Atom(variable: Variable(name: "rule", unit: nil, value: "nil"), op: .equal)
+        ruleKey.rel = "key"
+        
+        var table = Table(key: "t3.2")
+        table.title = "Travel distances on escape routes for risk group SI"
+        
+        var rule = Rule()
+        rule.addIf(atom: BooleanedAtoms(atoms: [system.settingValue(val: "type4"), system.settingValue(val: "type6"), system.settingValue(val: "type7")], bool: .or))
+        rule.addThen(atom: deadEnd.settingValue(val: "20 m")) //manual units since unit is nil
+        rule.addThen(atom: total.settingValue(val: "50 m"))
+        table.addRule(rule: rule)
+        
+        return table
+    }
+    
+    private func generateTable52() -> Table {
         let riskGroup = Atom(variable: Variable(name: "riskGroup", unit: nil, value: "CA"), op: .equal)
         
         let distance = Variable(name: "distanceToRelevantBoundary", unit: "m", value: nil)
@@ -113,7 +144,7 @@ class CAS3 {
         return table
     }
     
-    static func generateTable53() -> Table {
+    private func generateTable53() -> Table {
         let distance = Variable(name: "distanceToRelevantBoundary", unit: "m", value: nil)
         let area = Variable(name: "largestPermittedSingleUnprotectedArea", unit: "m^2", value: nil)
         let distanceToAdjecent = Variable(name: "distanceToAdjacentUnprotectedArea", unit: "m", value: nil)
@@ -140,7 +171,7 @@ class CAS3 {
         return table
     }
     
-    static func generateTable71() -> Table {
+    private func generateTable71() -> Table {
         let construction = Variable(name: "chimneyConstruction", unit: nil, value: nil)
         let jambTicknessEx = Variable(name: "chimneyJambThicknessExcludingFillingAndFlueLiner", unit: "mm", value: nil)
         let backTicknessEx = Variable(name: "chimneyBackThicknessExcludingFillingAndFlueLiner", unit: "mm", value: nil)
