@@ -43,10 +43,10 @@ import Foundation
 //print("Enter Table Name for File \"\(fileName)\": ")
 //let tableName = getInput(emptyError: "Empty table name. Try again.")
 
-let val = XMLConvertor(currentFileName: "NZBC-CAS3v4(text).xml")
-let rules = val.getRules(with: "5.2", in: val.getFileContent()!)
+//let val = XMLConvertor(currentFileName: "NZBC-CAS3v4(text).xml")
+//let rules = val.getRules(with: "5.2", in: val.getFileContent()!)
 
-let table = CAS2().generateTable(for: "3.2")!.description
+let table = E1().generateTable(for: "4", in: "1")!.description
 print(table)
 
 // automatically copy content ready to be pasted

@@ -23,8 +23,8 @@ class CAS4: Document {
     }
     
     private func generateTable32() -> Table {
-        let deadEnd = Atom(variable: Variable(name: "deadEndOpenPath", unit: "m", value: nil), op: .lessThanEqual)
-        let total = Atom(variable: Variable(name: "totalOpenPath", unit: "m", value: nil), op: .lessThanEqual)
+        let deadEnd = Atom(variable: Variable(name: "deop", unit: "m", value: nil), op: .lessThanEqual)
+        let total = Atom(variable: Variable(name: "top", unit: "m", value: nil), op: .lessThanEqual)
         
         let system = Atom(variable: Variable(name: "fireSafetySystem", unit: nil, value: nil), op: .equal)
         

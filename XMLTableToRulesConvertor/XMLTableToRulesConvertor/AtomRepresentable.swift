@@ -114,9 +114,9 @@ struct FunctionAtom: AtomRepresentable {
         var result = self.op.start
         result.append("<atom>")
         
-        result.append("<func>")
+        result.append("<fun>")
         result.append("(\(self.function))")
-        result.append("</func>")
+        result.append("</fun>")
         
         result.append("<var>")
         result.append(self.type.rawValue)

@@ -163,36 +163,97 @@ class E1: Document {
             table.refTypes = ["Paragraph"]
             table.refValues = ["2.3.4", "3.2.1", "4.1.6", "4.1.8", "4.1.11", "4.2.1"]
             
-            let valN = Atom(variable: Variable(name: "valueOfN", unit: nil, value: nil), op: .equal)
+            let valN = Atom(variable: Variable(name: "n", unit: nil, value: nil), op: .equal)
+            
+            let drainType = Atom(variable: Variable(name: "drain", unit: nil, value: nil), op: .equal, rel: "type")
             
             do {
-                let cPipes = Atom(variable: Variable(name: "circularPipes", unit: nil, value: nil), op: .equal)
+                let cPipes = Atom(variable: Variable(name: "material", unit: nil, value: nil), op: .equal)
                 
                 var rule = Rule()
+                rule.addIf(atom: drainType.settingValue(val: "channel"))
                 rule.addIf(atom: BooleanedAtoms(atoms: [cPipes.settingValue(val: "HDPE"), cPipes.settingValue(val: "uPVC")], bool: .or))
                 rule.addThen(atom: valN.settingValue(val: "0.011"))
                 table.addRule(rule: rule)
                 
                 rule = Rule()
+                rule.addIf(atom: drainType.settingValue(val: "channel"))
                 rule.addIf(atom: BooleanedAtoms(atoms: [cPipes.settingValue(val: "ceremic"), cPipes.settingValue(val: "concrete")], bool: .or))
                 rule.addThen(atom: valN.settingValue(val: "0.013"))
                 table.addRule(rule: rule)
             }
             
             do {
-                let cul = Atom(variable: Variable(name: "culverts", unit: nil, value: nil), op: .equal)
+                let cul = Atom(variable: Variable(name: "material", unit: nil, value: nil), op: .equal)
                 
                 var rule = Rule()
+                rule.addIf(atom: drainType.settingValue(val: "culvert"))
                 rule.addIf(atom: cul.settingValue(val: "castInSituConcrete"))
                 rule.addThen(atom: valN.settingValue(val: "0.015"))
                 table.addRule(rule: rule)
                 
                 rule = Rule()
+                rule.addIf(atom: drainType.settingValue(val: "culvert"))
                 rule.addIf(atom: cul.settingValue(val: "corrugatedMetal"))
                 rule.addThen(atom: valN.settingValue(val: "0.025"))
                 table.addRule(rule: rule)
             }
             
+            do {
+                let roughness = ["verySmooth", "smooth", "mediumSmooth", "slightlyRough", "rough", "mediumRough", "veryRough"]
+                
+                let channelType = Atom(variable: Variable(name: "channel", unit: nil, value: nil), op: .equal, rel: "type")
+                let roughnessAtom = Atom(variable: Variable(name: "channel", unit: nil, value: nil), op: .equal, rel: "surfaceRoughness")
+                
+                var rule = Rule()
+                rule.addIf(atom: drainType.settingValue(val: "channel"))
+                rule.addIf(atom: channelType.settingValue(val: "straightUniform"))
+                rule.addIf(atom: roughnessAtom.settingValue(val: roughness[0]))
+                rule.addThen(atom: valN.settingValue(val: "0.0225"))
+                table.addRule(rule: rule)
+                
+                rule = Rule()
+                rule.addIf(atom: drainType.settingValue(val: "channel"))
+                rule.addIf(atom: channelType.settingValue(val: "unlined"))
+                rule.addIf(atom: roughnessAtom.settingValue(val: roughness[1]))
+                rule.addThen(atom: valN.settingValue(val: "0.025"))
+                table.addRule(rule: rule)
+                
+                rule = Rule()
+                rule.addIf(atom: drainType.settingValue(val: "channel"))
+                rule.addIf(atom: channelType.settingValue(val: "roughStoneyBed"))
+                rule.addIf(atom: roughnessAtom.settingValue(val: roughness[2]))
+                rule.addThen(atom: valN.settingValue(val: "0.03"))
+                table.addRule(rule: rule)
+                
+                rule = Rule()
+                rule.addIf(atom: drainType.settingValue(val: "channel"))
+                rule.addIf(atom: channelType.settingValue(val: "winding"))
+                rule.addIf(atom: roughnessAtom.settingValue(val: roughness[3]))
+                rule.addThen(atom: valN.settingValue(val: "0.035"))
+                table.addRule(rule: rule)
+                
+                rule = Rule()
+                rule.addIf(atom: drainType.settingValue(val: "channel"))
+                rule.addIf(atom: BooleanedAtoms(atoms: [channelType.settingValue(val: "winding"), channelType.settingValue(val: "irregularCrossSection")], bool: .or))
+                rule.addIf(atom: roughnessAtom.settingValue(val: roughness[4]))
+                rule.addThen(atom: valN.settingValue(val: "0.045"))
+                table.addRule(rule: rule)
+                
+                rule = Rule()
+                rule.addIf(atom: drainType.settingValue(val: "channel"))
+                rule.addIf(atom: channelType.settingValue(val: "irregular"))
+                rule.addIf(atom: roughnessAtom.settingValue(val: roughness[5]))
+                rule.addThen(atom: valN.settingValue(val: "0.06"))
+                table.addRule(rule: rule)
+                
+                rule = Rule()
+                rule.addIf(atom: drainType.settingValue(val: "channel"))
+                rule.addIf(atom: channelType.settingValue(val: "irregularWinding"))
+                rule.addIf(atom: roughnessAtom.settingValue(val: roughness[6]))
+                rule.addThen(atom: valN.settingValue(val: "0.1"))
+                table.addRule(rule: rule)
+            }
             return table
         }
         
@@ -257,8 +318,67 @@ class E1: Document {
             
             do {
                 let box = Atom(variable: Variable(name: "culvert", unit: nil, value: "box"), op: .equal, rel: "type")
+                let wingWalls = Variable(name: "wingWalls", unit: nil, value: nil)
+                let edgeType = Atom(variable: Variable(name: "edge", unit: nil, value: nil), op: .equal, rel: "type")
+                let edge = Atom(variable: Variable(name: "edge", unit: nil, value: nil), op: .equal)
                 
+                var rule = Rule()
+                rule.addIf(atom: box)
+                rule.addIf(atom: Atom(variable: wingWalls.settingValue(val: "unavailable"), op: .equal, rel: "availability"))
+                rule.addIf(atom: edgeType.settingValue(val: "threeEdge"))
+                rule.addIf(atom: edge.settingValue(val: "square"))
+                rule.addThen(atom: loss.settingValue(val: "0.5"))
+                table.addRule(rule: rule)
                 
+                rule = Rule()
+                rule.addIf(atom: box)
+                rule.addIf(atom: Atom(variable: wingWalls.settingValue(val: "unavailable"), op: .equal, rel: "availability"))
+                rule.addIf(atom: edgeType.settingValue(val: "threeEdge"))
+                rule.addIf(atom: edge.settingValue(val: "x1"))
+                rule.addIf(atom: Atom(variable: Variable(name: "barrelDimension", unit: nil, value: "y1"), op: .equal))
+                rule.addIf(atom: FunctionAtom(function: "x1/y1", type: .ratio, value: 0.0833, op: .equal))
+                rule.addThen(atom: loss.settingValue(val: "0.2"))
+                table.addRule(rule: rule)
+                
+                rule = Rule()
+                rule.addIf(atom: box)
+                rule.addIf(atom: BooleanedAtoms(atoms: [
+                    Atom(variable: wingWalls.settingValue(val: "30°"), op: .greaterThanEqual),
+                    Atom(variable: wingWalls.settingValue(val: "70°"), op: .lessThan)], bool: .and))
+                rule.addIf(atom: edgeType.settingValue(val: "crown"))
+                rule.addIf(atom: edge.settingValue(val: "square"))
+                rule.addThen(atom: loss.settingValue(val: "0.4"))
+                table.addRule(rule: rule)
+                
+                rule = Rule()
+                rule.addIf(atom: box)
+                rule.addIf(atom: BooleanedAtoms(atoms: [
+                    Atom(variable: wingWalls.settingValue(val: "30°"), op: .greaterThanEqual),
+                    Atom(variable: wingWalls.settingValue(val: "70°"), op: .lessThan)], bool: .and))
+                rule.addIf(atom: edgeType.settingValue(val: "crown"))
+                rule.addIf(atom: edge.settingValue(val: "x1"))
+                rule.addIf(atom: Atom(variable: Variable(name: "culvertHeight", unit: nil, value: "y1"), op: .equal))
+                rule.addIf(atom: FunctionAtom(function: "x1/y1", type: .ratio, value: 0.0833, op: .equal))
+                rule.addThen(atom: loss.settingValue(val: "0.2"))
+                table.addRule(rule: rule)
+                
+                rule = Rule()
+                rule.addIf(atom: box)
+                rule.addIf(atom: BooleanedAtoms(atoms: [
+                    Atom(variable: wingWalls.settingValue(val: "10°"), op: .greaterThanEqual),
+                    Atom(variable: wingWalls.settingValue(val: "30°"), op: .lessThan)], bool: .and))
+                rule.addIf(atom: edgeType.settingValue(val: "crown"))
+                rule.addIf(atom: edge.settingValue(val: "square"))
+                rule.addThen(atom: loss.settingValue(val: "0.5"))
+                table.addRule(rule: rule)
+                
+                rule = Rule()
+                rule.addIf(atom: box)
+                rule.addIf(atom: Atom(variable: wingWalls.settingValue(val: "parallel"), op: .equal))
+                rule.addIf(atom: edgeType.settingValue(val: "crown"))
+                rule.addIf(atom: edge.settingValue(val: "square"))
+                rule.addThen(atom: loss.settingValue(val: "0.7"))
+                table.addRule(rule: rule)
             }
             
             return table
