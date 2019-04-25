@@ -46,7 +46,7 @@ import Foundation
 //let val = XMLConvertor(currentFileName: "NZBC-CAS3v4(text).xml")
 //let rules = val.getRules(with: "5.2", in: val.getFileContent()!)
 
-let table = E1().generateTable(for: "4", in: "1")!.description
+let table = E1().generateTable(for: "7", in: "2")!.description
 print(table)
 
 // automatically copy content ready to be pasted

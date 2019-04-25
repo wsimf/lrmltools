@@ -32,8 +32,12 @@ class E1: Document {
             case "2": return doc.generateTable2()
             case "3": return doc.generateTable3()
             case "4": return doc.generateTable4()
+            case "5": return doc.generateTable5()
+            case "6": return doc.generateTable6()
+            case "7": return doc.generateTable7()
             default: return nil
             }
+            
         default: return nil
         }
     }
@@ -618,6 +622,99 @@ class E1: Document {
                 var rule = Rule()
                 rule.addIf(atom: material.settingValue(val: matVal))
                 rule.addThen(atom: standards[index])
+                table.addRule(rule: rule)
+            }
+            
+            return table
+        }
+        
+        fileprivate func generateTable5() -> Table {
+            var table = Table(key: "t5")
+            table.title = "Downpipe Sizes for Given Roof Pitch and Area"
+            table.refTypes = ["Paragraph"]
+            table.refValues = ["4.2.1"]
+            
+            let roof = Variable(name: "roofPitch", unit: nil, value: nil)
+            let pipeSize = Variable(name: "downpipeSize", unit: "mm", value: nil)
+            let planArea = Atom(variable: Variable(name: "areaOfRoofServedByDownpipe", unit: "m^2", value: nil), op: .equal)
+            
+            let diameterType = Atom(variable: Variable(name: "pipeType", unit: nil, value: "diameter"), op: .equal)
+            let rectType = Atom(variable: Variable(name: "pipeType", unit: nil, value: "rectangular"), op: .equal)
+            
+            let roofValues = [25,35,45,55]
+            let diaValues = [63,74,100,150]
+            let rectValues = ["65 x 50", "100 x 50", "75 x 75", "100 x 75"]
+            
+            let areaValues = [[60,50,40,35], [85,70,60,50], [155,130,110,90], [350,290,250,200], [60,50,40,35], [100,80,70,60], [110,90,80,65], [150,120,105,90]]
+            
+            for (areaIndex, areaVal) in areaValues.enumerated() {
+                for (roofIndex, roofVal) in roofValues.enumerated() {
+                    var rule = Rule()
+                    if roofIndex == 0 {
+                        rule.addIf(atom: Atom(variable: roof.settingValue(val: "0°"), op: .greaterThan))
+                    } else {
+                        rule.addIf(atom: Atom(variable: roof.settingValue(val: "\(roofValues[roofIndex - 1])°"), op: .greaterThan))
+                    }
+                    
+                    rule.addIf(atom: Atom(variable: roof.settingValue(val: "\(roofVal)°"), op: .lessThanEqual))
+                    
+                    rule.addIf(atom: planArea.settingValue(val: String(areaVal[roofIndex])))
+                    
+                    if areaIndex < 4 {
+                        rule.addIf(atom: diameterType)
+                        rule.addThen(atom: Atom(variable: pipeSize.settingValue(val: String(diaValues[areaIndex])), op: .greaterThanEqual))
+                    } else {
+                        rule.addIf(atom: rectType)
+                        let reVal = rectValues[areaIndex - 4]
+                        rule.addThen(atom: Atom(variable: pipeSize.settingValue(val: String(reVal)), op: .greaterThanEqual))
+                    }
+                    
+                    table.addRule(rule: rule)
+                }
+            }
+
+            return table
+        }
+        
+        fileprivate func generateTable6() -> Table {
+            var table = Table(key: "t6")
+            table.title = "Acceptable Material Standards for Roof Gutters"
+            table.refTypes = ["Paragraph"]
+            table.refValues = ["5.2.1"]
+            
+            let material = Atom(variable: Variable(name: "gutterMaterial", unit: nil, value: nil), op: .equal)
+            let standard = Atom(variable: Variable(name: "standard", unit: nil, value: nil), op: .equal)
+            
+            let materials = ["PVC-U", "Galvanised Steel", "Copper", "Aluminium", "Stainless Steel", "Zinc Aluminium"]
+            let standards = ["AS 1273", "AS 1397", "BS 2870", "AS/NZS 1734", "NZS/BS 970", "AS 1397"]
+            
+            for (index, materialVal) in materials.enumerated() {
+                var rule = Rule()
+                rule.addIf(atom: material.settingValue(val: materialVal))
+                rule.addThen(atom: standard.settingValue(val: standards[index]))
+                table.addRule(rule: rule)
+            }
+            
+            return table
+        }
+        
+        fileprivate func generateTable7() -> Table {
+            var table = Table(key: "t7")
+            table.title = "Thermal Expansion of 5 m length over 50°C"
+            table.refTypes = ["Paragraph"]
+            table.refValues = ["5.4.1"]
+            
+            let material = Atom(variable: Variable(name: "gutterMaterial", unit: nil, value: nil), op: .equal)
+            let expansion = Atom(variable: Variable(name: "termalExpansion", unit: "mm", value: nil), op: .lessThanEqual)
+            
+            let materials = ["PVC-U", "Zinc", "Galvanised Steel", "Copper", "Aluminium", "Stainless Steel"]
+            let expansionVals = [17.5,5.0,2.5,4.5,5.8,3.8]
+            assert(materials.count == expansionVals.count)
+            
+            for (index, materialVal) in materials.enumerated() {
+                var rule = Rule()
+                rule.addIf(atom: material.settingValue(val: materialVal))
+                rule.addThen(atom: expansion.settingValue(val: String(expansionVals[index])))
                 table.addRule(rule: rule)
             }
             
