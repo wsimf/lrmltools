@@ -132,3 +132,60 @@ struct FunctionAtom: AtomRepresentable {
         return result
     }
 }
+
+struct DimentionAtom: AtomRepresentable {
+    
+    var width: Double? = nil
+    var depth: Double? = nil
+    var tickness: Double? = nil
+    
+    var widthUnit: String = "mm"
+    var depthUnit: String = "mm"
+    var ticknessUnit: String = "mm"
+    
+    var widthOperator: Operator = .equal
+    var depthOperator: Operator = .equal
+    var ticknessOperator: Operator = .equal
+    
+    var otherAtoms: [AtomRepresentable]? = nil
+    
+    init(width: Double?, depth: Double?, tickness: Double?) {
+        self.width = width
+        self.depth = depth
+        self.tickness = tickness
+    }
+    
+    mutating func setAllUnits(to unit: String) {
+        self.widthUnit = unit
+        self.depthUnit = unit
+        self.ticknessUnit = unit
+    }
+    
+    mutating func setAllOperators(to op: Operator) {
+        self.widthOperator = op
+        self.depthOperator = op
+        self.ticknessOperator = op
+    }
+    
+    var description: String {
+        var atoms: [AtomRepresentable] = self.otherAtoms ?? []
+        if let width = self.width {
+            atoms.append(Atom(variable: Variable(name: "width", unit: self.widthUnit, value: String(width)), op: self.widthOperator))
+        }
+        
+        if let tickness = self.tickness {
+            atoms.append(Atom(variable: Variable(name: "tickness", unit: self.ticknessUnit, value: String(tickness)), op: self.ticknessOperator))
+        }
+        
+        if let depth = self.depth {
+            atoms.append(Atom(variable: Variable(name: "depth", unit: self.depthUnit, value: String(depth)), op: self.depthOperator))
+        }
+        
+        if atoms.count > 0 {
+            let result = BooleanedAtoms(atoms: atoms, bool: .and)
+            return result.description
+        } else {
+            return ""
+        }
+    }
+}

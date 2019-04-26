@@ -721,17 +721,4 @@ class E1: Document {
             return table
         }
     }
-    
-    
-    static func generateTable7() -> Table {
-        var table = Table(key: "")
-        table.title = ""
-        table.refTypes = ["Paragraph"]
-        table.refValues = ["8.3.e"]
-        
-        
-        
-        return table
-    }
-
 }
