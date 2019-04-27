@@ -106,7 +106,7 @@ class E1: Document {
             rule.addIf(atom: resArea)
             rule.addIf(atom: imperviousArea)
             rule.addIf(atom: grossArea)
-            rule.addIf(atom: FunctionAtom(function: "x1/y1", type: .ratio, value: 0.36, op: .lessThan))
+            rule.addIf(atom: FunctionAtom(function: "x1/y1", type: .ratio, value: "0.36", op: .lessThan))
             rule.addThen(atom: coefficient.settingValue(val: "0.45"))
             table.addRule(rule: rule)
             
@@ -115,8 +115,8 @@ class E1: Document {
             rule.addIf(atom: imperviousArea)
             rule.addIf(atom: grossArea)
             rule.addIf(atom: BooleanedAtoms(atoms: [
-                FunctionAtom(function: "x1/y1", type: .ratio, value: 0.36, op: .greaterThanEqual),
-                FunctionAtom(function: "x1/y1", type: .ratio, value: 0.50, op: .lessThan)], bool: .and))
+                FunctionAtom(function: "x1/y1", type: .ratio, value: "0.36", op: .greaterThanEqual),
+                FunctionAtom(function: "x1/y1", type: .ratio, value: "0.50", op: .lessThan)], bool: .and))
             rule.addThen(atom: coefficient.settingValue(val: "0.55"))
             table.addRule(rule: rule)
             
@@ -340,7 +340,7 @@ class E1: Document {
                 rule.addIf(atom: edgeType.settingValue(val: "threeEdge"))
                 rule.addIf(atom: edge.settingValue(val: "x1"))
                 rule.addIf(atom: Atom(variable: Variable(name: "barrelDimension", unit: nil, value: "y1"), op: .equal))
-                rule.addIf(atom: FunctionAtom(function: "x1/y1", type: .ratio, value: 0.0833, op: .equal))
+                rule.addIf(atom: FunctionAtom(function: "x1/y1", type: .ratio, value: "0.0833", op: .equal))
                 rule.addThen(atom: loss.settingValue(val: "0.2"))
                 table.addRule(rule: rule)
                 
@@ -362,7 +362,7 @@ class E1: Document {
                 rule.addIf(atom: edgeType.settingValue(val: "crown"))
                 rule.addIf(atom: edge.settingValue(val: "x1"))
                 rule.addIf(atom: Atom(variable: Variable(name: "culvertHeight", unit: nil, value: "y1"), op: .equal))
-                rule.addIf(atom: FunctionAtom(function: "x1/y1", type: .ratio, value: 0.0833, op: .equal))
+                rule.addIf(atom: FunctionAtom(function: "x1/y1", type: .ratio, value: "0.0833", op: .equal))
                 rule.addThen(atom: loss.settingValue(val: "0.2"))
                 table.addRule(rule: rule)
                 

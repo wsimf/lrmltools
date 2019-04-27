@@ -100,6 +100,7 @@ struct FunctionAtom: AtomRepresentable {
     
     enum FunctionType: String, XMLStartEndRepresentable {
         case ratio = "ratio"
+        case multiply = "multiply"
         
         var start: String { return "<\(self.rawValue)>"}
         var end: String { return "</\(self.rawValue)>"}
@@ -107,7 +108,7 @@ struct FunctionAtom: AtomRepresentable {
     
     var function: String
     var type: FunctionType
-    var value: Double
+    var value: String
     var op: Operator
     
     var description: String {

@@ -26,6 +26,8 @@ class B1: Document {
             switch id {
             case "1": return doc.generateTable1()
             case "2": return doc.generateTable2()
+            case "3": return doc.generateTable3()
+            case "4": return doc.generateTable4()
             default: return nil
             }
             
@@ -227,6 +229,45 @@ class B1: Document {
                 rule.addThen(atom: ks.settingValue(val: String(rdUpperVals[index])))
                 table.addRule(rule: rule)
             }
+            
+            return table
+        }
+        
+        fileprivate func generateTable3() -> Table {
+            var table = Table(key: "t3")
+            table.title = "Closely Spaced Piles, Design Lateral Resistance"
+            table.refTypes = ["Paragraph"]
+            table.refValues = ["4.6.1"]
+            
+            let spacing = Atom(variable: Variable(name: "pileSpacing", unit: nil, value: nil), op: .equal)
+            let resistance = Atom(variable: Variable(name: "isolatedPileLateralResistance", unit: "%", value: nil), op: .equal)
+            
+            var rule = Rule()
+            let var1 = Atom(variable: Variable(name: "nominalPileWidth", unit: nil, value: "x"), op: .equal)
+            let funcAtom = FunctionAtom(function: "4.0 * x", type: .multiply, value: "y", op: .equal)
+            rule.addIf(atom: var1)
+            rule.addIf(atom: funcAtom)
+            rule.addIf(atom: spacing.settingValue(val: "y"))
+            rule.addThen(atom: resistance.settingValue(val: "100"))
+            table.addRule(rule: rule)
+            
+            rule = Rule()
+            rule.addIf(atom: spacing.settingValue(val: "nominalPileWidth"))
+            rule.addThen(atom: resistance.settingValue(val: "25"))
+            table.addRule(rule: rule)
+            
+            return table
+        }
+        
+        fileprivate func generateTable4() -> Table {
+            var table = Table(key: "t4")
+            table.title = "Strength Reduction Factors for Deep Foundation Design"
+            table.refTypes = ["Paragraph"]
+            table.refValues = ["4.7.1"]
+            
+            let valuesAtomLower = Atom(variable: Variable(name: "φpc", unit: nil, value: nil), op: .greaterThanEqual)
+            let valuesAtomUpper = Atom(variable: Variable(name: "φpc", unit: nil, value: nil), op: .lessThanEqual)
+            
             
             return table
         }
