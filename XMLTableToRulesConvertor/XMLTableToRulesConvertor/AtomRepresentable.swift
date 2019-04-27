@@ -149,6 +149,8 @@ struct DimentionAtom: AtomRepresentable {
     
     var otherAtoms: [AtomRepresentable]? = nil
     
+    var dimentionType: String? = nil
+    
     init(width: Double?, depth: Double?, tickness: Double?) {
         self.width = width
         self.depth = depth
@@ -170,15 +172,27 @@ struct DimentionAtom: AtomRepresentable {
     var description: String {
         var atoms: [AtomRepresentable] = self.otherAtoms ?? []
         if let width = self.width {
-            atoms.append(Atom(variable: Variable(name: "width", unit: self.widthUnit, value: String(width)), op: self.widthOperator))
+            if let type = self.dimentionType {
+                atoms.append(Atom(variable: Variable(name: type, unit: self.widthUnit, value: String(width)), op: self.widthOperator, rel: "width"))
+            } else {
+                atoms.append(Atom(variable: Variable(name: "width", unit: self.widthUnit, value: String(width)), op: self.widthOperator))
+            }
         }
         
         if let tickness = self.tickness {
-            atoms.append(Atom(variable: Variable(name: "tickness", unit: self.ticknessUnit, value: String(tickness)), op: self.ticknessOperator))
+            if let type = self.dimentionType {
+                atoms.append(Atom(variable: Variable(name: type, unit: self.ticknessUnit, value: String(tickness)), op: self.ticknessOperator, rel: "tickness"))
+            } else {
+                atoms.append(Atom(variable: Variable(name: "tickness", unit: self.ticknessUnit, value: String(tickness)), op: self.ticknessOperator))
+            }
         }
         
         if let depth = self.depth {
-            atoms.append(Atom(variable: Variable(name: "depth", unit: self.depthUnit, value: String(depth)), op: self.depthOperator))
+            if let type = self.dimentionType {
+                atoms.append(Atom(variable: Variable(name: type, unit: self.depthUnit, value: String(depth)), op: self.depthOperator, rel: "depth"))
+            } else {
+                atoms.append(Atom(variable: Variable(name: "depth", unit: self.depthUnit, value: String(depth)), op: self.depthOperator))
+            }
         }
         
         if atoms.count > 0 {
