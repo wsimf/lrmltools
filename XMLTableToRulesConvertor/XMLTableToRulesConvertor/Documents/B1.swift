@@ -268,6 +268,29 @@ class B1: Document {
             let valuesAtomLower = Atom(variable: Variable(name: "φpc", unit: nil, value: nil), op: .greaterThanEqual)
             let valuesAtomUpper = Atom(variable: Variable(name: "φpc", unit: nil, value: nil), op: .lessThanEqual)
             
+            let notEq = NegatedAtom(atom: Atom(variable: Variable(name: "loadCombination", unit: nil, value: "earthquakeOverstrength"), op: .equal))
+            let strength = Atom(variable: Variable(name: "geotechnicalStrength", unit: nil, value: nil), op: .equal, rel: "assessment")
+            
+            let assesments = ["staticLoadTestingToFailture", "staticProofLoadTesting", "staticCPTAnalysis", "staticSPTAnalysis", "staticLaboratoryDataAnalysis"]
+            let lowerVals = [0.65,0.70,0.45,0.40,0.45]
+            let upperVals = [0.85,0.90,0.65,0.55,0.55]
+            assert(lowerVals.count == upperVals.count)
+            assert(assesments.count == lowerVals.count)
+            
+            for (index, assesment) in assesments.enumerated() {
+                var rule = Rule()
+                rule.addIf(atom: notEq)
+                rule.addIf(atom: strength.settingValue(val: assesment))
+                rule.addThen(atom: valuesAtomLower.settingValue(val: String(lowerVals[index])))
+                rule.addThen(atom: valuesAtomUpper.settingValue(val: String(upperVals[index])))
+                table.addRule(rule: rule)
+            }
+            
+            var rule = Rule()
+            rule.addIf(atom: notEq.atom)
+            rule.addThen(atom: valuesAtomLower.settingValue(val: "0.80"))
+            rule.addThen(atom: valuesAtomUpper.settingValue(val: "0.90"))
+            table.addRule(rule: rule)
             
             return table
         }
